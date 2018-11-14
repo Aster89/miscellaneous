@@ -1,0 +1,68 @@
+\documentclass[b5paper,oneside]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{bm}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{cleveref}
+
+\begin{document}
+
+Given the system $\bm A \bm x = \bm b$, where $\bm A \in \mathbb{R}^m \times
+\mathbb{R}^n$, $\bm x \in \mathbb{R}^n$, and $\bm b \in \mathbb{R}^m$, find the
+array $\bm x$ which verifies the first $c$ equations and best-fits the following
+$m - c$ (i.e., in the sense of least-square).
+
+The following partitioning for the matrices/arrays can be defined
+\begin{equation*}
+  \bm A = \begin{bmatrix}
+    \bm A_1\\
+    \bm A_2
+  \end{bmatrix}\quad \text{with} \quad \bm A_1 \in \mathbb{R}^c \times \mathbb{R}^n \quad \text{and} \quad \bm A_2 \in \mathbb{R}^{m-c} \times \mathbb{R}^n,
+\end{equation*}
+\begin{equation*}
+  \bm b = \begin{bmatrix}
+    \bm b_1\\
+    \bm b_2
+  \end{bmatrix}\quad \text{with} \quad \bm b_1 \in \mathbb{R}^c \quad \text{and} \quad \bm b_2 \in \mathbb{R}^{m-c}.
+\end{equation*}
+(The array $\bm x$ need not be partitioned as well.)
+
+Defined the residual as $\bm r = \bm A \bm x - \bm b$, the task consists in
+minimizing the quantity $\frac{1}{2}\bm r^\text{T} \bm r$, provided $\bm A_1
+\bm x = \bm b_1$ holds. In other words, a \emph{constrained optimization
+problem} must be solved, where the constrain is the quation
+\begin{equation}
+  \bm A_1 \bm x - \bm b_1 = 0,\label{eq:constr}
+\end{equation}
+and the quantity to be minimezed is $\frac{1}{2}\bm r^\text{T} \bm r$.
+
+The Lagrange function is
+\begin{align*}
+  \mathcal{L}(\bm x, \bm \lambda) &= \frac{1}{2}(\bm A \bm x - \bm b)^\text{T}(\bm A \bm x - \bm b) + \bm \lambda^\text{T}(\bm A_1 \bm x - \bm b_1)\\
+                                  &= \frac{1}{2}\bm x^\text{T} \bm A^\text{T} \bm A \bm x - \bm x^\text{T} \bm A^\text{T} \bm b + \frac{1}{2}\bm b^\text{T} \bm b + \bm x^\text{T} \bm A_1^\text{T} \bm \lambda - \bm b_1^\text{T} \bm \lambda,
+\end{align*}
+and its partial derivatives with respect to $\bm x$ and $\bm \lambda$ are
+\begin{align}
+  \frac{\partial \Phi (\bm x, \bm \lambda)}{\partial \bm x^\text{T}} &= \bm A^\text{T} \bm A \bm x - \bm A^\text{T} \bm b - \bm A_1^\text{T} \bm \lambda\label{eq:phix}\\
+  \frac{\partial \Phi (\bm x, \bm \lambda)}{\partial \bm \lambda^\text{T}} &= \bm A_1 \bm x - \bm b_1\notag
+\end{align}
+Setting \cref{eq:phix} to zero, and solving with respect to $\bm x$, yields
+\begin{equation}
+  \bm x = (\bm A^\text{T} \bm A)^{-1} (\bm A^\text{T} \bm b + \bm A_1^\text{T} \bm \lambda). \label{eq:xoflam}
+\end{equation}
+Inserting \cref{eq:xoflam} into \cref{eq:constr}, and rearranging the result,
+leads to
+\begin{equation*}
+  \bm A_1 (\bm A^\text{T} \bm A)^{-1} \bm A_1^\text{T} \bm \lambda = \bm b_1 -
+  \bm A_1 (\bm A^\text{T} \bm A)^{-1} \bm A^\text{T} \bm b,
+\end{equation*}
+which can be solved for $\bm \lambda$, whose value can be substituted back into
+\cref{eq:xoflam}, eventually obtaining the solution,
+\begin{equation*}
+  \bm x = (\bm A^\text{T} \bm A)^{-1} (\bm A^\text{T} \bm b + \bm A_1^\text{T} \underbrace{(\bm A_1 (\bm A^\text{T} \bm A)^{-1} \bm A_1^\text{T} \bm)^{-1}(\bm b_1 -
+  \bm A_1 (\bm A^\text{T} \bm A)^{-1} \bm A^\text{T} \bm b)}_{\displaystyle \bm \lambda}).
+\end{equation*}
+\end{document}
