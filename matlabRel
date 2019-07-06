@@ -1,0 +1,15 @@
+#!/bin/bash
+# bash script providing qutebrowser with a MATLAB documentation URL modified so
+# as to access a specific version, which is given as the first argument in the
+# form of a string such as R2017b, R2015a, ... (futher arguments are ignored)
+
+# ignore calls with zero arguments
+(( $# == 0 )) && exit 0
+# set extglob to activate extended pattern matching operators
+shopt -s extglob
+# assemble substituting string (turning the "r" to upper case, if it is lower case)
+string="/help/releases/${1^r}/"
+# pattern matches any release (the most recent one is not explicitly written in the url)
+pattern="/help/?(releases/R20+([[:digit:]])@([ab])/)"
+# send to qutebrowser
+echo "open ${QUTE_URL/$pattern/$string}" >> "$QUTE_FIFO"
