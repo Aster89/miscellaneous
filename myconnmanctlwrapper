@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+name=$(basename $0)
+noinputs_before_exit=${NOINPUTS_BEFORE_EXIT:=3}
+while [[ "$cmd" != 'exit' ]]; do
+  echo -n "$name " 1>&2
+  read cmd
+  if [[ -z "$cmd" ]]; then
+    (( --noinputs_before_exit == 0 )) && exit
+  else
+    noinputs_before_exit=$NOINPUTS_BEFORE_EXIT
+    if [[ "$cmd" =~ ^connect\  ]]; then
+      connmanctl connect $(connmanctl services | awk '/'"${cmd#* }"'/ { print $NF; exit }')
+    else
+      connmanctl "$cmd"
+    fi
+  fi
+done
