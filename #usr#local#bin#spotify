@@ -1,0 +1,12 @@
+#!/bin/sh
+spotify=/usr/bin/spotify
+blocker=$HOME/blockSpotifyAds.sh
+if [[ -x $spotify && -x $blocker ]];
+then
+  $blocker &
+  block_pid=$!
+  echo "Blocker: $block_pid" > /tmp/spotifyWrapper.$$
+  echo "Spotify wrapper: $$" >> /tmp/spotifyWrapper.$$
+  $spotify
+  trap "kill -TERM $block_pid" SIGINT SIGTERM EXIT
+fi
