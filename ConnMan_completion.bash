@@ -65,7 +65,7 @@ __tree() {
   # entry @repeat refers to when connmanctl keeps giving
   # the same alternative completions as the for the last
   # word.
-  cat <<EOF
+  command cat <<EOF
 $main
 	agent
 		on
