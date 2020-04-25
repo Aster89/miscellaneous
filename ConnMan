@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 declare -A map
-eval $(command connmanctl services | \
+eval "$(command connmanctl services | \
   awk 'NF > 1 { print "map["$(NF - 1)"]="$NF; next }
-              { print "map["$NF"]="$NF }')
+              { print "map["$NF"]="$NF }')"
 i=0
 declare -a args
 for arg in "$@"; do

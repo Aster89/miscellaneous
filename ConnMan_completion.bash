@@ -4,7 +4,7 @@ main='ConnMan'
 
 _ConnMan_completions()
 {
-  COMPREPLY=($(compgen -W "$(__compListGen "${COMP_WORDS[@]}")" -- "${COMP_WORDS[$COMP_CWORD]}"))
+  mapfile -t COMPREPLY < <(compgen -W "$(__compListGen "${COMP_WORDS[@]}")" -- "${COMP_WORDS[$COMP_CWORD]}")
 }
 
 __compListGen() {
@@ -21,7 +21,7 @@ __subTree() {
   # process first entry and pipe recursively
   one=$1
   shift
-  __getNode $one < /dev/stdin | __subTree "$@"
+  __getNode "$one" < /dev/stdin | __subTree "$@"
 }
 
 __getNode() {
