@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 spotify=/usr/bin/spotify
 blocker=$HOME/blockSpotifyAds.sh
 if [[ -x $spotify && -x $blocker ]];
@@ -8,5 +8,6 @@ then
   echo "Blocker: $block_pid" > /tmp/spotifyWrapper.$$
   echo "Spotify wrapper: $$" >> /tmp/spotifyWrapper.$$
   $spotify
+  # shellcheck disable=SC2064
   trap "kill -TERM $block_pid" SIGINT SIGTERM EXIT
 fi
