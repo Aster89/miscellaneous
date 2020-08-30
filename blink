@@ -45,8 +45,8 @@ print_header() {
 
   # compute scores and align them to the right
   (( trim = ${#right} - ${#wrong} ))
-  (( trim < 0 )) &&  score_plus="Score: ✓ $(print_spaces ${trim#-})$right" ||  score_plus="Score: ✓ $right"
-  (( trim > 0 )) && score_minus="       ✗ $(print_spaces ${trim#-})$wrong" || score_minus="       ✗ $wrong"
+  (( trim < 0 )) &&  score_plus="Score: ✓ $(print_spaces "${trim#-}")$right" ||  score_plus="Score: ✓ $right"
+  (( trim > 0 )) && score_minus="       ✗ $(print_spaces "${trim#-}")$wrong" || score_minus="       ✗ $wrong"
   (( max_length = ${#score_plus} > ${#score_minus} ? ${#score_plus} : ${#score_minus} ))
 
   # fill space in between and print the two lines
@@ -58,7 +58,7 @@ print_header() {
 redraw_screen() {
   clear
   center_vertically
-  center_horizontally $number
+  center_horizontally "$number"
 }
 
 decrement_time() {
@@ -69,7 +69,7 @@ increment_time() {
 }
 
 adjust_time() {
-  BLINK_INTERVAL=$(awk -v step=$BLINK_INTERVAL -v dir="$1" 'BEGIN { printf "%.2g", step*(10/9)^dir }')
+  BLINK_INTERVAL=$(awk -v step="$BLINK_INTERVAL" -v dir="$1" 'BEGIN { printf "%.2g", step*(10/9)^dir }')
 }
 
 quit() {
@@ -85,7 +85,7 @@ set -u
 right=0
 wrong=0
 
-BLINK_INTERVAL=$(awk -v step=$BLINK_INTERVAL -v dir=0 'BEGIN { printf "%.2g", step*(10/9)^dir }')
+BLINK_INTERVAL=$(awk -v step="$BLINK_INTERVAL" -v dir=0 'BEGIN { printf "%.2g", step*(10/9)^dir }')
 
 # main loop
 while true; do
@@ -94,8 +94,8 @@ while true; do
 
   # show number for short time
   redraw_screen
-  printf $number
-  sleep $BLINK_INTERVAL
+  printf '%s' "$number"
+  sleep "$BLINK_INTERVAL"
 
   # erase the number (go back, overwrite with spaces, go back again)
   eval "printf '\b%.0s' {1..${#number}}"
@@ -104,30 +104,30 @@ while true; do
 
   read -rn 1 first_char
   case $first_char in
-    $BLINK_QUIT )
+    "$BLINK_QUIT" )
       quit
       ;;
-    $BLINK_DECREMENT_DIGITS )
+    "$BLINK_DECREMENT_DIGITS" )
       (( BLINK_DIGITS > 1 )) && (( BLINK_DIGITS-- ))
       ;;
-    $BLINK_INCREMENT_DIGITS )
+    "$BLINK_INCREMENT_DIGITS" )
       (( BLINK_DIGITS < COLUMNS - 1 )) && (( BLINK_DIGITS++ ))
       ;;
-    $BLINK_DECREMENT_TIME )
+    "$BLINK_DECREMENT_TIME" )
       decrement_time
       ;;
-    $BLINK_INCREMENT_TIME )
+    "$BLINK_INCREMENT_TIME" )
       increment_time
       ;;
     [0-9] )
       #redraw_screen
       # erase $first_char
-      printf '\b%.0s'
+      printf '\b%.0s' ""
       echo -ne "\r"
       # use $first_char as a default to have it printed again
       # the leading space is to allow backspacing on the first digit
       # without the all leading space being erased all together
-      read -p "$(center_horizontally $number)" -i "$first_char" -e answer
+      read -rp "$(center_horizontally "$number")" -i "$first_char" -e answer
       (( answer == number ? right++ : wrong++ ))
       ;;
   esac
