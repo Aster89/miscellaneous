@@ -6,8 +6,7 @@ which playerctl 2> /dev/null 1>&2 && which pactl 2> /dev/null 1>&2 || exit 1
 ### functions ###
 # check if Spotify is playing ads
 shouldMute() {
-  [[ $(playerctl --player=spotify metadata 2> /dev/null \
-    | sed 's/^.*:title *//p;d') =~ 'Advertisement' ]]
+  [[ $(playerctl --player=spotify metadata 2> /dev/null | sed '1!d') =~ trackid.*spotify:ad: ]]
 }
 
 # retrieve the sink Spotify is using
