@@ -11,8 +11,7 @@ shouldMute() {
 
 # retrieve the sink Spotify is using
 getCurrentSink() {
-  pactl list \
-    | sed -E '/^Sink Input #/,/^$/{/^\s*Sink:\s*/{s///;h};/application\.name.*Spotify/{x;p}};d'
+  pactl list | sed -E '/^Sink Input #/,/^$/{/^\s*Sink:\s*/{s///;h};/application\.name.*Spotify/{x;p;Q}};d'
 }
 
 # mute/unmute
